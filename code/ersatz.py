@@ -31,7 +31,7 @@ def make_blank(N, M, timelim=[0., 1000.], sigmalim=[1., 4.]):
         result.append((times, sigmas, rvs))
     return result
 
-def add_stack(blanks, amp=0.25, period=187., phase=0.113):
+def add_stack(blanks, amp=0.25, period=180., phase=0.113):
     """
     Add the exact same exoplanet into every radial velocity curve.
     """
@@ -47,7 +47,7 @@ def ersatz_prior_draw():
     Draw an exoplanet from a crazy, hard-set prior.
     """
     phase = 2. * np.pi * np.random.uniform()
-    period = 180 + 40 * np.random.normal()
+    period = 180. + 40. * np.random.normal()
     amp = 0.25 + 0.05 * np.random.normal() 
     return amp, period, phase
 
