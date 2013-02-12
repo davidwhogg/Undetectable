@@ -2,11 +2,19 @@
 This file is part of the Undetectable project.
 Copyright 2013 David W. Hogg.
 
-purpose: Make ersatz exoplanet data.
+purpose
+-------
+* Make ersatz exoplanet data.
+
+bugs
+----
+* Half the things that should be arguments are hard-set.
+* Doesn't write out pickles yet.
+* Not tested at all.
+
 """
-
 import numpy as np
-
+import cPickle as pickle
 
 def make_blank(N, M, timelim=[0., 1000.], sigmalim=[1., 4.]):
     """
@@ -44,6 +52,10 @@ def ersatz_prior_draw():
     return amp, period, phase
 
 def add_ersatz(blanks):
+    """
+    Add a different ersatz planet ito every radial velocity curve.
+    Planets are drawn from `ersatz_prior_draw()`.
+    """
     result = []
     for blank in blanks:
         times, sigmas, brvs = blank
@@ -53,11 +65,27 @@ def add_ersatz(blanks):
     return result
 
 def make_all(N, M):
+    """
+    Make all three kinds of data: "Blank" data with no signal.
+    "Stack" data all with the same signal in it; these data can be
+    stacked to make a discovery.  "Ersatz" data with full
+    heterogeneity, so no stack will work; hierarchical inference will
+    be required!
+    """
     blanks = make_blank(N, M)
     stacks = add_stack(blanks)
-    ersatzs = add_ersatz(blanks)
-    return blanks, stacks, ersatzs
+    ersatzes = add_ersatz(blanks)
+    return blanks, stacks, ersatzes
 
 if __name__ == "__main__":
+    """
+    Make and pickle.
+    """
     np.random.seed(42)
     bs, ss, es = make_all(1000, 100)
+    for data, prefix in [(bs, "blank"),
+                         (ss, "stack"),
+                         (es, "ersatz")]:
+        picklefile = open(prefix + ".pickle", "wb")
+        pickle.dump(data, picklefile)
+        picklefile.close()
