@@ -6,7 +6,7 @@ the next generation of Measuring the Undetectable
 Authors
 -------
 
-* David W. Hogg
+* David W. Hogg (NYU)
 
 License
 -------
