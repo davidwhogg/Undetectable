@@ -28,27 +28,32 @@ def hogg_savefig(prefix):
     """
     Do what savefig *should* do
     """
-    for fn in [prefix + ".png", prefix + ".pdf"]:
+    for fn in [prefix + ".png"]: # , prefix + ".pdf"]:
         print "saving " + fn
         plt.savefig(fn)
     return None
 
-def plot_pickle(fn):
+def plot_pickle(pickleprefix):
     """
     Make all the plots for an ersatz data set.
     """
-    picklefile = open(fn, "r")
+    picklefile = open(pickleprefix + ".pickle", "r")
     sets = pickle.load(picklefile)
     picklefile.close()
     for i, (times, sigmas, rvs) in enumerate(sets):
-        prefix = "data%03d" % i
+        prefix = "%s%03d" % (pickleprefix, i)
         plt.clf()
         hogg_errorbar(times, rvs, sigmas, alpha=0.5)
         plt.plot(times, rvs, 'ko', alpha=0.5)
+        plt.xlim(-10., 1010.)
+        plt.xlabel("time (d)")
+        plt.ylim(-20., 20.)
+        plt.ylabel("radial velocity (km\,s$^{-1}$)")
         hogg_savefig(prefix)
-        assert False
+        if i == 9:
+            break
     return None
 
 if __name__ == "__main__":
     for prefix in ["blank", "stack", "ersatz"]:
-        plot_pickle(prefix + ".pickle")
+        plot_pickle(prefix)

@@ -37,7 +37,7 @@ def add_stack(blanks, amp=0.25, period=180., phase=0.113):
     result = []
     for blank in blanks:
         times, sigmas, brvs = blank
-        rvs = 1. * brvs + amp * np.cos(2. * np.pi / period + phase)
+        rvs = 1. * brvs + amp * np.cos(2. * np.pi * times / period + phase)
         result.append((times, sigmas, rvs))
     return result
 
@@ -59,7 +59,7 @@ def add_ersatz(blanks):
     for blank in blanks:
         times, sigmas, brvs = blank
         amp, period, phase = ersatz_prior_draw()
-        rvs = 1. * brvs + amp * np.cos(2. * np.pi / period + phase)
+        rvs = 1. * brvs + amp * np.cos(2. * np.pi * times / period + phase)
         result.append((times, sigmas, rvs))
     return result
 
