@@ -30,7 +30,7 @@ def make_blank(N, M, timelim=[0., 1000.], sigmalim=[1., 4.]):
         result.append((times, sigmas, rvs))
     return result
 
-def add_stack(blanks, amp=0.50, period=180., phase=0.113):
+def add_stack(blanks, amp=0.5, period=180., phase=0.113):
     """
     Add the exact same exoplanet into every radial velocity curve.
     """
