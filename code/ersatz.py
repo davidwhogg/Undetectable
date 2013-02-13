@@ -9,7 +9,6 @@ purpose
 bugs
 ----
 * Half the things that should be arguments are hard-set.
-* Doesn't write out pickles yet.
 * Not tested at all.
 
 """
