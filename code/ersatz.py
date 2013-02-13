@@ -47,7 +47,7 @@ def ersatz_prior_draw():
     """
     phase = 2. * np.pi * np.random.uniform()
     period = 180. + 40. * np.random.normal()
-    amp = 0.25 + 0.05 * np.random.normal() 
+    amp = 0.5 + 0.1 * np.random.normal() 
     return amp, period, phase
 
 def add_ersatz(blanks):
