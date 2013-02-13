@@ -21,7 +21,7 @@ def hogg_errorbar(x, y, yerr, **kwargs):
     Plot simple error bars.
     """
     for xx, yy, yyerr in zip(x, y, yerr):
-        plt.plot([xx, xx], [yy - yerr, yy + yerr], '-', **kwargs)
+        plt.plot([xx, xx], [yy - yyerr, yy + yyerr], 'k-', **kwargs)
     return None
 
 def hogg_savefig(prefix):
@@ -43,8 +43,8 @@ def plot_pickle(pickleprefix):
     for i, (times, sigmas, rvs) in enumerate(sets):
         prefix = "%s%03d" % (pickleprefix, i)
         plt.clf()
-        hogg_errorbar(times, rvs, sigmas, alpha=0.5)
-        plt.plot(times, rvs, 'ko', alpha=0.5)
+        hogg_errorbar(times, rvs, sigmas, alpha=1.)
+        plt.plot(times, rvs, 'ko', alpha=1.)
         plt.xlim(-10., 1010.)
         plt.xlabel("time (d)")
         plt.ylim(-20., 20.)
