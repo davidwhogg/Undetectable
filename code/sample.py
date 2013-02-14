@@ -9,4 +9,83 @@ purpose
 bugs
 ----
 * Not yet written.
+* Lots is hard coded that shouldn't be.
+
 """
+import matplotlib
+matplotlib.use('Agg')
+from matplotlib import rc
+rc('font',**{'family':'serif','size':12})
+rc('text', usetex=True)
+import pylab as plt
+import numpy as np
+import cPickle as pickle
+import emcee
+
+def ln_likelihood(data, pars, info):
+    """
+    Natural log of probability of the data given the parameters.  Sort-of.
+    """
+    times, invvars = info
+    ln_amp, ln_period, phase = pars
+    models = np.exp(ln_amp) * np.cos(2. * np.pi * times / np.exp(ln_period) + phase)
+    chi_squared = (data - models)**2 * invvars
+    return -0.5 * np.sum(chi_squared)
+
+def ln_prior(pars, info):
+    """
+    Natural log of the (hard-set) prior on parameters.  Sort-of.
+    """
+    ln_amp, ln_period, phase = pars
+    if phase < 0.:
+        return -np.Inf
+    if phase > 2. * np.pi:
+        return -np.Inf
+    if ln_amp < -4.6:
+        return -np.Inf
+    if ln_amp > 2.3:
+        return -np.Inf
+    if ln_period < 2.3:
+        return -np.Inf
+    if ln_period > 9.2:
+        return -np.Inf
+    return 0.
+
+def ln_p(pars, data, info):
+    """
+    The input for emcee.
+    """
+    lnp = ln_prior(pars, info)
+    if lnp == -np.Inf:
+        return lnp
+    return lnp + ln_likelihood(data, pars, info)
+
+def sample_one_set(set, prefix):
+    """
+    Run MCMC one one exoplanet system.
+    """
+    print "foo", prefix
+    return None
+
+def sample_all_sets(sets, prefix):
+    """
+    Run MCMC on every exoplanet in the sets, and make plots and pickles.
+    """
+    for i, set in enumerate(sets):
+        sprefix = "%s%03d_sampling" % (prefix, i)
+        sample_one_set(set, sprefix)
+    return None
+
+def read_pickle(prefix):
+    """
+    Read sets in from a pickle.
+    """
+    picklefile = open(prefix + ".pickle", "r")
+    sets = pickle.load(picklefile)
+    picklefile.close()
+    return sets
+
+if __name__ == "__main__":
+    for prefix in ["blank", "stack", "ersatz"]:
+        sets = read_pickle(prefix)
+        sample_all_sets(sets, prefix)
