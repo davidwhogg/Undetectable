@@ -8,7 +8,7 @@ purpose
 
 bugs
 ----
-* Not yet written.
+* Actual sampling part not yet written.
 * Lots is hard coded that shouldn't be.
 
 """
@@ -60,7 +60,7 @@ def ln_p(pars, data, info):
         return lnp
     return lnp + ln_likelihood(data, pars, info)
 
-def sample_one_set(set, prefix):
+def sample_one_set(set, prefix, plot=False):
     """
     Run MCMC one one exoplanet system.
     """
@@ -71,9 +71,12 @@ def sample_all_sets(sets, prefix):
     """
     Run MCMC on every exoplanet in the sets, and make plots and pickles.
     """
+    pbit = True
     for i, set in enumerate(sets):
+        if i > 15:
+            pbit = False
         sprefix = "%s%03d_sampling" % (prefix, i)
-        sample_one_set(set, sprefix)
+        sample_one_set(set, sprefix, plot=pbit)
     return None
 
 def read_pickle(prefix):
@@ -86,6 +89,7 @@ def read_pickle(prefix):
     return sets
 
 if __name__ == "__main__":
+    np.random.seed(42)
     for prefix in ["blank", "stack", "ersatz"]:
         sets = read_pickle(prefix)
         sample_all_sets(sets, prefix)
