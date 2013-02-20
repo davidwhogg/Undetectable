@@ -120,6 +120,6 @@ def read_pickle(prefix):
 
 if __name__ == "__main__":
     np.random.seed(42)
-    for prefix in ["blank", "stack", "ersatz"]:
+    for prefix in ["stack", "ersatz", "blank"]:
         sets = read_pickle(prefix)
         sample_all_sets(sets, prefix)
