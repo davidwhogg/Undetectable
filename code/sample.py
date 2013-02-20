@@ -68,7 +68,7 @@ def sample_one_set(set, prefix, plot=False):
     info = times, 1. / (sigmas * sigmas)
     # initialize MCMC
     nwalkers = 16
-    foo = np.array([np.log(0.5), np.log(180.), np.pi])
+    foo = np.array([np.log(1.), np.log(180.), np.pi])
     p0 = [foo + 0.001 * np.random.normal(size = foo.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, foo.size, ln_p, args=[rvs, info])
     # burn in and run
