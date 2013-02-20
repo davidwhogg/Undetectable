@@ -57,6 +57,7 @@ def ln_p(pars, data, info):
     """
     lnp = ln_prior(pars, info)
     if lnp == -np.Inf:
+        print "INSANITY", pars
         return lnp
     return lnp + ln_likelihood(data, pars, info)
 
@@ -69,13 +70,13 @@ def sample_one_set(set, prefix, plot=False):
     # initialize MCMC
     nwalkers = 16
     foo = np.array([np.log(0.5), np.log(180.), np.pi])
-    p0 = [foo * 0.01 * np.random.normal(size = foo.size) for i in range(nwalkers)]
+    p0 = [foo + 0.001 * np.random.normal(size = foo.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, foo.size, ln_p, args=[rvs, info])
     # burn in and run
-    nsteps = 200
+    nsteps = 1024
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save thinned chain
-    thinchain = sampler.chain[:,nsteps/2::10,:]
+    thinchain = sampler.chain[:,nsteps/2::8,:]
     picklefile = open(prefix + ".pickle", "wb")
     pickle.dump(thinchain, picklefile)
     picklefile.close()
@@ -83,8 +84,8 @@ def sample_one_set(set, prefix, plot=False):
     if plot:
         plt.clf()
         for w in range(nwalkers):
-            # plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
-            plt.plot(sampler.lnprobability[w,:], '-', alpha=0.5)
+            plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
+            # plt.plot(sampler.lnprobability[w,:], '-', alpha=0.5)
         hogg_savefig(prefix)
     print "foo", prefix, thinchain.shape
     return None
@@ -104,7 +105,6 @@ def sample_all_sets(sets, prefix):
     for i, set in enumerate(sets):
         if i > 3:
             pbit = False
-            break
         sprefix = "%s%03d_sampling" % (prefix, i)
         sample_one_set(set, sprefix, plot=pbit)
     return None
