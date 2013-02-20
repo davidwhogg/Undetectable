@@ -62,19 +62,49 @@ def ln_p(pars, data, info):
 
 def sample_one_set(set, prefix, plot=False):
     """
-    Run MCMC one one exoplanet system.
+    Run MCMC on one exoplanet system.
     """
-    print "foo", prefix
+    times, sigmas, rvs = set
+    info = times, 1. / (sigmas * sigmas)
+    # initialize MCMC
+    nwalkers = 16
+    foo = np.array([np.log(0.5), np.log(180.), np.pi])
+    p0 = [foo * 0.01 * np.random.normal(size = foo.size) for i in range(nwalkers)]
+    sampler = emcee.EnsembleSampler(nwalkers, foo.size, ln_p, args=[rvs, info])
+    # burn in and run
+    nsteps = 200
+    pos, lnp, state = sampler.run_mcmc(p0, nsteps)
+    # save thinned chain
+    thinchain = sampler.chain[:,nsteps/2::10,:]
+    picklefile = open(prefix + ".pickle", "wb")
+    pickle.dump(thinchain, picklefile)
+    picklefile.close()
+    # plot
+    if plot:
+        plt.clf()
+        for w in range(nwalkers):
+            # plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
+            plt.plot(sampler.lnprobability[w,:], '-', alpha=0.5)
+        hogg_savefig(prefix)
+    print "foo", prefix, thinchain.shape
+    return None
+
+def hogg_savefig(prefix):
+    fn = prefix + ".png"
+    print "saving " + fn
+    plt.savefig(fn)
     return None
 
 def sample_all_sets(sets, prefix):
     """
-    Run MCMC on every exoplanet in the sets, and make plots and pickles.
+    Run MCMC on every exoplanet in the sets, and make plots and
+    pickles.
     """
     pbit = True
     for i, set in enumerate(sets):
-        if i > 15:
+        if i > 3:
             pbit = False
+            break
         sprefix = "%s%03d_sampling" % (prefix, i)
         sample_one_set(set, sprefix, plot=pbit)
     return None
