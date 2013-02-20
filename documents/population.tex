@@ -3,6 +3,23 @@
 
 \documentclass[12pt]{article}
 \newcommand{\documentname}{\textsl{Note}}
+
+% math operators and the like
+\newcommand{\given}{\,|\,}
+\newcommand{\dd}{\mathrm{d}}
+
+% *all* math symbols will be defined!
+\newcommand{\pdf}{{p}}
+\newcommand{\setof}[1]{\left\{{#1}\right\}}
+\newcommand{\data}{{D_n}}
+\newcommand{\setofalldata}{\setof{\data}_{n=1}^N}
+\newcommand{\parsymbol}{\theta}
+\newcommand{\pars}{\parsymbol_n}
+\newcommand{\hyperpars}{\alpha}
+\newcommand{\sample}{\parsymbol_{nk}}
+\newcommand{\default}[1]{{#1}^{(0)}}
+\newcommand{\setofallsamplesdefault}{\setof{\default{\sample}}_{k=1}^K}
+
 \begin{document}
 
 \begin{abstract}
@@ -25,5 +42,30 @@ inferences are hard to test with existing or new data; while parameter
 estimation and model comparison are possible, informative model
 checking is nearly impossible.
 \end{abstract}
+
+\section{Method}
+
+The method for this paper involves the following crap:
+\begin{eqnarray}
+\pdf(\theta\given\data,\hyperpars) &\equiv& \frac{\pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)}{\pdf(\data\given\hyperpars)}
+\\
+\pdf(\data\given\hyperpars) &\equiv& \int \pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)\,\dd\pars
+\\
+\pdf(\setofalldata\given\hyperpars) &\equiv& \prod_{n=1}^N \pdf(\data\given\hyperpars)
+\quad.
+\end{eqnarray}
+
+Now imagine we have $K$ samples $\setofallsamplesdefault$ from the
+posteror pdf generated with some default (standard or weakly
+informative or na\"ive) hyperprior setting $\default{\hyperpars}$:
+\begin{eqnarray}
+\setofallsamplesdefault &\sim& \pdf(\pars\given\data,\default{\hyperpars})
+\\
+\int f(\pars)\,\pdf(\pars\given\data,\default{\hyperpars})\,\dd\pars &\approx& \frac{1}{K}\,\sum_{k=1}^K f(\sample)
+\\
+\int \frac{\pdf(\pars\given\hyperpars)}{\pdf(\pars\given\default{\hyperpars})}\,\pdf(\pars\given\data,\default{\hyperpars}) &\approx& \frac{1}{K}\,\sum_{k=1}^K \frac{\pdf(\sample\given\hyperpars)}{\pdf(\sample\given\default{\hyperpars})}
+\quad,
+\end{eqnarray}
+where...
 
 \end{document}
