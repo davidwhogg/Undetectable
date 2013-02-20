@@ -57,7 +57,6 @@ def ln_p(pars, data, info):
     """
     lnp = ln_prior(pars, info)
     if lnp == -np.Inf:
-        print "INSANITY", pars
         return lnp
     return lnp + ln_likelihood(data, pars, info)
 
@@ -77,7 +76,9 @@ def sample_one_set(set, prefix, plot=False):
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save thinned chain
     thinchain = sampler.chain[:,nsteps/2::8,:]
-    picklefile = open(prefix + ".pickle", "wb")
+    fn = prefix + ".pickle"
+    print "writing " + fn
+    picklefile = open(fn, "wb")
     pickle.dump(thinchain, picklefile)
     picklefile.close()
     # plot
@@ -87,12 +88,11 @@ def sample_one_set(set, prefix, plot=False):
             plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
             # plt.plot(sampler.lnprobability[w,:], '-', alpha=0.5)
         hogg_savefig(prefix)
-    print "foo", prefix, thinchain.shape
     return None
 
 def hogg_savefig(prefix):
     fn = prefix + ".png"
-    print "saving " + fn
+    print "writing " + fn
     plt.savefig(fn)
     return None
 
