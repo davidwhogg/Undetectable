@@ -72,7 +72,7 @@ def sample_one_set(set, prefix, plot=False):
     p0 = [foo + 0.001 * np.random.normal(size = foo.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, foo.size, ln_p, args=[rvs, info])
     # burn in and run
-    nsteps = 1024
+    nsteps = 2048
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save thinned chain
     thinchain = sampler.chain[:,nsteps/2::8,:]
