@@ -47,11 +47,17 @@ checking is nearly impossible.
 
 The method for this paper involves the following crap:
 \begin{eqnarray}
-\pdf(\theta\given\data,\hyperpars) &\equiv& \frac{\pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)}{\pdf(\data\given\hyperpars)}
+\pdf(\theta\given\data,\hyperpars)
+  &\equiv&
+\frac{\pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)}{\pdf(\data\given\hyperpars)}
 \\
-\pdf(\data\given\hyperpars) &\equiv& \int \pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)\,\dd\pars
+\pdf(\data\given\hyperpars)
+  &\equiv&
+\int \pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)\,\dd\pars
 \\
-\pdf(\setofalldata\given\hyperpars) &\equiv& \prod_{n=1}^N \pdf(\data\given\hyperpars)
+\pdf(\setofalldata\given\hyperpars)
+  &\equiv&
+\prod_{n=1}^N \pdf(\data\given\hyperpars)
 \quad.
 \end{eqnarray}
 
@@ -59,11 +65,31 @@ Now imagine we have $K$ samples $\setofallsamplesdefault$ from the
 posteror pdf generated with some default (standard or weakly
 informative or na\"ive) hyperprior setting $\default{\hyperpars}$:
 \begin{eqnarray}
-\setofallsamplesdefault &\sim& \pdf(\pars\given\data,\default{\hyperpars})
+\setofallsamplesdefault
+ &\sim&
+\pdf(\pars\given\data,\default{\hyperpars})
 \\
-\int f(\pars)\,\pdf(\pars\given\data,\default{\hyperpars})\,\dd\pars &\approx& \frac{1}{K}\,\sum_{k=1}^K f(\sample)
+\int f(\pars)\,\pdf(\pars\given\data,\default{\hyperpars})\,\dd\pars
+ &\approx&
+\frac{1}{K}\,\sum_{k=1}^K f(\sample)
+\end{eqnarray}
+
+And the importance-sampling version of hierarchical inference is
+obtained by:
+\begin{eqnarray}
+\pdf(\data\given\hyperpars)
+ &\equiv&
+\int \frac{\pdf(\pars\given\default{\hyperpars})}{\pdf(\pars\given\default{\hyperpars})}\,\frac{\pdf(\data\given\default{\hyperpars})}{\pdf(\data\given\default{\hyperpars})}\,\pdf(\data\given\pars)\,\pdf(\pars\given\hyperpars)\,\dd\pars
 \\
-\int \frac{\pdf(\pars\given\hyperpars)}{\pdf(\pars\given\default{\hyperpars})}\,\pdf(\pars\given\data,\default{\hyperpars}) &\approx& \frac{1}{K}\,\sum_{k=1}^K \frac{\pdf(\sample\given\hyperpars)}{\pdf(\sample\given\default{\hyperpars})}
+\frac{\pdf(\data\given\hyperpars)}{\pdf(\data\given\default{\hyperpars})} 
+ &\equiv&
+\int \frac{\pdf(\pars\given\hyperpars)}{\pdf(\pars\given\default{\hyperpars})}\,\pdf(\pars\given\data,\default{\hyperpars})\,\dd\pars
+\\
+\frac{\pdf(\data\given\hyperpars)}{\pdf(\data\given\default{\hyperpars})} 
+ &\approx&
+\frac{1}{K}\,\sum_{k=1}^K \frac{\pdf(\sample\given\hyperpars)}{\pdf(\sample\given\default{\hyperpars})}
+\\
+\frac{\pdf(\setofalldata\given\hyperpars)}{\pdf(\setofalldata\given\default{\hyperpars})} &\equiv& \prod_{n=1}^N \frac{\pdf(\data\given\hyperpars)}{\pdf(\data\given\default{\hyperpars})}
 \quad,
 \end{eqnarray}
 where...
