@@ -18,7 +18,7 @@
 \newcommand{\hyperpars}{\alpha}
 \newcommand{\sample}{\parsymbol_{nk}}
 \newcommand{\default}[1]{{#1}^{(0)}}
-\newcommand{\setofallsamplesdefault}{\setof{\default{\sample}}_{k=1}^K}
+\newcommand{\setofallsamples}{\setof{\sample}_{k=1}^K}
 
 \begin{document}
 
@@ -61,11 +61,11 @@ The method for this paper involves the following crap:
 \quad.
 \end{eqnarray}
 
-Now imagine we have $K$ samples $\setofallsamplesdefault$ from the
+Now imagine we have $K$ samples $\setofallsamples$ from the
 posteror pdf generated with some default (standard or weakly
 informative or na\"ive) hyperprior setting $\default{\hyperpars}$:
 \begin{eqnarray}
-\setofallsamplesdefault
+\setofallsamples
  &\sim&
 \pdf(\pars\given\data,\default{\hyperpars})
 \\
