@@ -29,7 +29,7 @@
 \newcommand{\periodmax}{\period_{\max}}
 \newcommand{\periodpower}{\gamma}
 \newcommand{\normal}{N}
-\newcommand{\pareto}{Q}
+\newcommand{\powerlaw}{Q}
 \newcommand{\uniform}{U}
 
 \begin{document}
@@ -69,6 +69,8 @@ p(e_{nm})
 \quad,
 \end{eqnarray}
 where...
+
+We made three different kinds of fake data... blank... stack... ersatz...
 
 Hierarchical inference just moves the ``likelihood'' up one level:
 \begin{eqnarray}
@@ -135,9 +137,9 @@ parameters:
 \begin{eqnarray}
 \pdf(\pars\given\hyperpars)
   &=&
-\pareto(\amp\given\ampmin,\ampmax,\amppower)\,\pareto(\period\given\periodmin,\periodmax,\periodpower)\,\uniform(\phase\given 0,2\pi)
+\powerlaw(\amp\given\ampmin,\ampmax,\amppower)\,\powerlaw(\period\given\periodmin,\periodmax,\periodpower)\,\uniform(\phase\given 0,2\pi)
 \\
-\pareto(x\given a,b,c)
+\powerlaw(x\given a,b,c)
   &\equiv&
 \left\{\begin{array}{cl}
   0 & \mbox{for}~x < a \\
@@ -154,7 +156,7 @@ parameters:
 \end{array}\right.
 \\
 \uniform(x\given a,b)
-  &=& \pareto(x\given a,b,1)
+  &=& \powerlaw(x\given a,b,1)
 \\
 \hyperpars
   &\equiv&
@@ -168,11 +170,11 @@ a hyper-prior:
 \begin{eqnarray}
 \pdf(\ampmin)
   &=&
-\pareto(\ampmin\given\amp_1,\ampmax,0)
+\powerlaw(\ampmin\given\amp_1,\ampmax,0)
 \\
 \pdf(\ampmax)
   &=&
-\pareto(\ampmax\given\ampmin,\amp_2,0)
+\powerlaw(\ampmax\given\ampmin,\amp_2,0)
 \\
 \pdf(\amppower)
   &=&
@@ -180,11 +182,11 @@ a hyper-prior:
 \\
 \pdf(\periodmin)
   &=&
-\pareto(\periodmin\given\period_1,\periodmax,0)
+\powerlaw(\periodmin\given\period_1,\periodmax,0)
 \\
 \pdf(\periodmax)
   &=&
-\pareto(\periodmax\given\periodmin,\period_2,0)
+\powerlaw(\periodmax\given\periodmin,\period_2,0)
 \\
 \pdf(\periodpower)
   &=&
