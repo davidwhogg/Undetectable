@@ -50,8 +50,8 @@ def ln_likelihood(samples, pars, info):
                                ln_uniform(ln_period, lnperiodmin, lnperiodmax) -
                                ln_uniform(ln_amp, lnamp1, lnamp2) -
                                ln_uniform(ln_period, lnperiod1, lnperiod2))
-    print np.mean(np.exp(lnpratios), axis=1)
     lnpratios = np.log(np.mean(np.exp(lnpratios), axis=1))
+    print "woohoo!"
     return np.sum(lnpratios)
 
 def ln_hyperprior(pars, info):
@@ -99,7 +99,7 @@ def read_pickles(prefix):
     """
     Read sets in from a pickle.
     """
-    N = 100
+    N = 256
     for n in range(N):
         picklefile = open(prefix + "%03d_sampling.pickle" % n, "r")
         sampling = pickle.load(picklefile)
@@ -126,7 +126,7 @@ if __name__ == "__main__":
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
     # burn in and run
-    nsteps = 20
+    nsteps = 32
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
@@ -139,4 +139,4 @@ if __name__ == "__main__":
         plt.clf()
         for w in range(nwalkers):
             plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
-    hogg_savefig("hierarchical%03d" % d)
+        hogg_savefig("hierarchical%03d" % d)
