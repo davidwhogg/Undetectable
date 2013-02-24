@@ -48,13 +48,13 @@ def ln_prior(pars, info):
         return -np.Inf
     if phase > 2. * np.pi:
         return -np.Inf
-    if ln_amp < lnampmin:
+    if ln_amp < lnamp1:
         return -np.Inf
-    if ln_amp > lnampmax:
+    if ln_amp > lnamp2:
         return -np.Inf
-    if ln_period < lnperiodmin:
+    if ln_period < lnperiod1:
         return -np.Inf
-    if ln_period > lnperiodmax:
+    if ln_period > lnperiod2:
         return -np.Inf
     return 0.
 
