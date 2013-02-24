@@ -30,6 +30,7 @@ lnperiod1 = 2.3
 lnperiod2 = 9.2
 pars0 = np.array([lnamp1, lnamp2, lnperiod1, lnperiod2])
 pars1 = 1. * pars0
+likecounter = 0
 
 def ln_likelihood(samples, pars, info):
     """
@@ -53,6 +54,8 @@ def ln_likelihood(samples, pars, info):
                                ln_uniform(ln_period, lnperiodmin, lnperiodmax) -
                                foo)
     lnpratios = np.log(np.mean(np.exp(lnpratios), axis=1))
+    print "woo hoo", likecounter
+    likecounter += 1
     return np.sum(lnpratios)
 
 def ln_hyperprior(pars, info):
@@ -127,7 +130,7 @@ if __name__ == "__main__":
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
     # burn in and run
-    nsteps = 8
+    nsteps = 16
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
@@ -136,8 +139,8 @@ if __name__ == "__main__":
     picklefile = open(fn, "wb")
     pickle.dump(thinchain, picklefile)
     picklefile.close()
-    for d in range(info[2]):
+    for d in range(pars.size):
         plt.clf()
         for w in range(nwalkers):
-            plt.plot(sampler.chain[w,:,2], '-', alpha=0.5)
+            plt.plot(sampler.chain[w,:,d], '-', alpha=0.5)
         hogg_savefig("hierarchical%03d" % d)
