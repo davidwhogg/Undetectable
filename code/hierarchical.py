@@ -128,7 +128,7 @@ if __name__ == "__main__":
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
     # burn in and run
-    nsteps = 64
+    nsteps = 512
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
