@@ -8,7 +8,6 @@ purpose
 
 bugs
 ----
-* Actual sampling part not yet written.
 * Lots is hard coded that shouldn't be.
 
 """
