@@ -132,6 +132,8 @@ obtained by:
 \end{eqnarray}
 where...
 
+...Notes about log-sum...
+
 The hyperparameters will be parameters of power-law distributions for
 parameters:
 \begin{eqnarray}
@@ -172,9 +174,11 @@ a hyper-prior:
   &=&
 \powerlaw(\ampmin\given\amp_1,\amp_2,0)
 \\
-\pdf(\ampmax\given\ampmin)
+\pdf(\ampmax)
   &=&
-\powerlaw(\ampmax\given\ampmin,\amp_2,0)
+\powerlaw(\ampmax\given\amp_1,\amp_2,0)
+\\
+\ampmin &<& \ampmax
 \\
 \pdf(\amppower)
   &=&
@@ -184,9 +188,11 @@ a hyper-prior:
   &=&
 \powerlaw(\periodmin\given\period_1,\period_2,0)
 \\
-\pdf(\periodmax\given\periodmin)
+\pdf(\periodmax)
   &=&
-\powerlaw(\periodmax\given\periodmin,\period_2,0)
+\powerlaw(\periodmax\given\period_1,\period_2,0)
+\\
+\periodmin &<& \periodmax
 \\
 \pdf(\periodpower)
   &=&
