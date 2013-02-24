@@ -170,9 +170,9 @@ a hyper-prior:
 \begin{eqnarray}
 \pdf(\ampmin)
   &=&
-\powerlaw(\ampmin\given\amp_1,\ampmax,0)
+\powerlaw(\ampmin\given\amp_1,\amp_2,0)
 \\
-\pdf(\ampmax)
+\pdf(\ampmax\given\ampmin)
   &=&
 \powerlaw(\ampmax\given\ampmin,\amp_2,0)
 \\
@@ -182,9 +182,9 @@ a hyper-prior:
 \\
 \pdf(\periodmin)
   &=&
-\powerlaw(\periodmin\given\period_1,\periodmax,0)
+\powerlaw(\periodmin\given\period_1,\period_2,0)
 \\
-\pdf(\periodmax)
+\pdf(\periodmax\given\periodmin)
   &=&
 \powerlaw(\periodmax\given\periodmin,\period_2,0)
 \\
