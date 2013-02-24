@@ -21,6 +21,14 @@ import numpy as np
 import cPickle as pickle
 import emcee
 
+"""
+Hard-set some prior defaults.
+"""
+lnamp1 = -4.6
+lnamp2 = 2.3
+lnperiod1 = 2.3
+lnperiod2 = 9.2
+
 def ln_likelihood(data, pars, info):
     """
     Natural log of probability of the data given the parameters.  Sort-of.
@@ -40,13 +48,13 @@ def ln_prior(pars, info):
         return -np.Inf
     if phase > 2. * np.pi:
         return -np.Inf
-    if ln_amp < -4.6:
+    if ln_amp < lnampmin:
         return -np.Inf
-    if ln_amp > 2.3:
+    if ln_amp > lnampmax:
         return -np.Inf
-    if ln_period < 2.3:
+    if ln_period < lnperiodmin:
         return -np.Inf
-    if ln_period > 9.2:
+    if ln_period > lnperiodmax:
         return -np.Inf
     return 0.
 
