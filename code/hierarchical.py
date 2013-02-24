@@ -29,6 +29,7 @@ lnamp2 = 2.3
 lnperiod1 = 2.3
 lnperiod2 = 9.2
 pars0 = np.array([lnamp1, lnamp2, lnperiod1, lnperiod2])
+pars1 = 1. * pars0
 
 def ln_likelihood(samples, pars, info):
     """
@@ -42,16 +43,16 @@ def ln_likelihood(samples, pars, info):
     """
     N, K, D = info
     lnampmin, lnampmax, lnperiodmin, lnperiodmax = pars
+    foo= (ln_uniform(0.5 * (lnamp1 + lnamp2), lnamp1, lnamp2) +
+          ln_uniform(0.5 * (lnperiod1 + lnperiod2), lnperiod1, lnperiod2))
     lnpratios = np.zeros((N, K))
     for n, sampling in enumerate(samples):
         for k, sample in enumerate(sampling):
             ln_amp, ln_period, phase = sample
             lnpratios[n, k] = (ln_uniform(ln_amp, lnampmin, lnampmax) +
                                ln_uniform(ln_period, lnperiodmin, lnperiodmax) -
-                               ln_uniform(ln_amp, lnamp1, lnamp2) -
-                               ln_uniform(ln_period, lnperiod1, lnperiod2))
+                               foo)
     lnpratios = np.log(np.mean(np.exp(lnpratios), axis=1))
-    print "woohoo!"
     return np.sum(lnpratios)
 
 def ln_hyperprior(pars, info):
@@ -122,11 +123,11 @@ if __name__ == "__main__":
     pars[1] -= 0.5
     pars[2] += 0.5
     pars[3] -= 0.5
-    nwalkers = 16
+    nwalkers = 8
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
     # burn in and run
-    nsteps = 32
+    nsteps = 8
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
