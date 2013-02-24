@@ -30,7 +30,6 @@ lnperiod1 = 2.3
 lnperiod2 = 9.2
 pars0 = np.array([lnamp1, lnamp2, lnperiod1, lnperiod2])
 pars1 = 1. * pars0
-likecounter = 0
 
 def ln_likelihood(samples, pars, info):
     """
@@ -54,8 +53,7 @@ def ln_likelihood(samples, pars, info):
                                ln_uniform(ln_period, lnperiodmin, lnperiodmax) -
                                foo)
     lnpratios = np.log(np.mean(np.exp(lnpratios), axis=1))
-    print "woo hoo", likecounter
-    likecounter += 1
+    print "woo hoo", pars
     return np.sum(lnpratios)
 
 def ln_hyperprior(pars, info):
