@@ -20,6 +20,7 @@ import pylab as plt
 import numpy as np
 import cPickle as pickle
 import emcee
+import sys
 
 """
 Hard-set some hyperprior defaults.  Synchronize to `sample.py`
@@ -41,7 +42,7 @@ def ln_likelihood(samples, pars, info):
 
     This function does a **very dangerous** log-sum operation.
     """
-    N, K, D = info
+    N, K, D, prefix = info
     lnampmin, lnampmax, lnperiodmin, lnperiodmax = pars
     foo= (ln_uniform(0.5 * (lnamp1 + lnamp2), lnamp1, lnamp2) +
           ln_uniform(0.5 * (lnperiod1 + lnperiod2), lnperiod1, lnperiod2))
@@ -53,7 +54,7 @@ def ln_likelihood(samples, pars, info):
                                ln_uniform(ln_period, lnperiodmin, lnperiodmax) -
                                foo)
     lnpratios = np.log(np.mean(np.exp(lnpratios), axis=1))
-    print "woo hoo", pars
+    print prefix, pars
     return np.sum(lnpratios)
 
 def ln_hyperprior(pars, info):
@@ -114,11 +115,10 @@ def read_pickles(prefix):
         samples[n] = sampling
     return samples
 
-if __name__ == "__main__":
+def sample_one_set(prefix):
     # get data
-    prefix = "ersatz"
     samples = read_pickles(prefix)
-    info = samples.shape
+    info = samples.shape + (prefix, )
     # initialize MCMC
     pars = 1. * pars0
     pars[0] += 1.
@@ -127,14 +127,14 @@ if __name__ == "__main__":
     pars[3] -= 1.
     nwalkers = 16
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
-    sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
+    sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=(nwalkers / 2 + 1))
     # burn in and run
-    nsteps = 512
+    nsteps = 256
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
-    prefix = "hierarchical_%s" % prefix
-    fn = prefix + ".pickle"
+    bigprefix = "hierarchical_%s" % prefix
+    fn = bigprefix + ".pickle"
     print "writing " + fn
     picklefile = open(fn, "wb")
     pickle.dump(thinchain, picklefile)
@@ -144,4 +144,8 @@ if __name__ == "__main__":
         plt.clf()
         for w in range(nwalkers):
             plt.plot(sampler.chain[w,:,d], '-', alpha=0.5)
-        hogg_savefig("%s%03d" % (prefix, d))
+        hogg_savefig("%s%03d" % (bigprefix, d))
+    return None
+
+if __name__ == "__main__":
+    sample_one_set(sys.argv[1])
