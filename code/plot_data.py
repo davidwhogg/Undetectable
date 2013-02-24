@@ -61,7 +61,7 @@ def plot_pickle(prefix):
         plt.plot(times, rvs, 'ko', alpha=1.)
         hogg_lim_and_label()
         hogg_savefig(pprefix)
-        if i == 9:
+        if i == 7:
             break
     return None
 

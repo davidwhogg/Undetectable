@@ -82,7 +82,7 @@ def sample_one_set(set, prefix, plot=False):
     nsteps = 2048
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save thinned chain
-    thinchain = sampler.chain[:,nsteps/2::8,:]
+    thinchain = sampler.chain[:,nsteps/2::16,:] # thin by factor of 16
     fn = prefix + ".pickle"
     print "writing " + fn
     picklefile = open(fn, "wb")
@@ -110,7 +110,7 @@ def sample_all_sets(sets, prefix):
     """
     pbit = True
     for i, set in enumerate(sets):
-        if i > 3:
+        if i > 7:
             pbit = False
         sprefix = "%s%03d_sampling" % (prefix, i)
         sample_one_set(set, sprefix, plot=pbit)

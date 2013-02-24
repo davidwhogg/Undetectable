@@ -101,7 +101,7 @@ def read_pickles(prefix):
     """
     Read sets in from a pickle.
     """
-    N = 256
+    N = 512
     for n in range(N):
         picklefile = open(prefix + "%03d_sampling.pickle" % n, "r")
         sampling = pickle.load(picklefile)
@@ -120,15 +120,15 @@ if __name__ == "__main__":
     info = samples.shape
     # initialize MCMC
     pars = 1. * pars0
-    pars[0] += 0.5
-    pars[1] -= 0.5
-    pars[2] += 0.5
-    pars[3] -= 0.5
-    nwalkers = 8
+    pars[0] += 1.
+    pars[1] -= 1.
+    pars[2] += 1.
+    pars[3] -= 1.
+    nwalkers = 16
     p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=nwalkers+1)
     # burn in and run
-    nsteps = 16
+    nsteps = 64
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!

@@ -81,7 +81,7 @@ if __name__ == "__main__":
     Make and pickle.
     """
     np.random.seed(42)
-    bs, ss, es = make_all(1000, 100)
+    bs, ss, es = make_all(512, 128)
     for data, prefix in [(bs, "blank"),
                          (ss, "stack"),
                          (es, "ersatz")]:
