@@ -116,7 +116,8 @@ def read_pickles(prefix):
 
 if __name__ == "__main__":
     # get data
-    samples = read_pickles("stack")
+    prefix = "ersatz"
+    samples = read_pickles(prefix)
     info = samples.shape
     # initialize MCMC
     pars = 1. * pars0
@@ -132,13 +133,15 @@ if __name__ == "__main__":
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
     thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
-    fn = "hierarchical.pickle"
+    prefix = "hierarchical_%s" % prefix
+    fn = prefix + ".pickle"
     print "writing " + fn
     picklefile = open(fn, "wb")
     pickle.dump(thinchain, picklefile)
     picklefile.close()
+    # make some basic plots
     for d in range(pars.size):
         plt.clf()
         for w in range(nwalkers):
             plt.plot(sampler.chain[w,:,d], '-', alpha=0.5)
-        hogg_savefig("hierarchical%03d" % d)
+        hogg_savefig("%s%03d" % (prefix, d))
