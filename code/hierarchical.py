@@ -119,20 +119,31 @@ def sample_one_set(prefix):
     # get data
     samples = read_pickles(prefix)
     info = samples.shape + (prefix, )
-    # initialize MCMC
+    # set some way-initial parameters
     pars = 1. * pars0
     pars[0] += 1.
     pars[1] -= 1.
     pars[2] += 1.
     pars[3] -= 1.
+    # do a loop over parameter-space search runs
     nwalkers = 16
-    p0 = [pars + 0.01 * np.random.normal(size = pars.size) for i in range(nwalkers)]
+    nburn = 4
+    nsteps = 128
+    for burn in range(nburn):
+        # start up the sampler
+        p0 = [pars + 0.001 * np.random.normal(size = pars.size) for i in range(nwalkers)]
+        sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=(nwalkers / 2 + 1))
+        pos, lnp, state = sampler.run_mcmc(p0, nsteps)
+        best = np.argmax(sampler.lnprobability.flatten())
+        pars = sampler.flatchain[best]
+        print "choosing best parameters so far:", best, pars
+    # do final run (only the latter half of which we will keep)
+    nsteps = 256
+    p0 = [pars + 0.001 * np.random.normal(size = pars.size) for i in range(nwalkers)]
     sampler = emcee.EnsembleSampler(nwalkers, pars.size, ln_p, args=[samples, info], threads=(nwalkers / 2 + 1))
-    # burn in and run
-    nsteps = 512
     pos, lnp, state = sampler.run_mcmc(p0, nsteps)
     # save chain
-    thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by factor 1!!
+    thinchain = sampler.chain[:,nsteps/2::1,:] # subsample by a factor of 1
     bigprefix = "hierarchical_%s" % prefix
     fn = bigprefix + ".pickle"
     print "writing " + fn

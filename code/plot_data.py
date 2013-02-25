@@ -15,6 +15,17 @@ rc('text', usetex=True)
 import pylab as plt
 import numpy as np
 import cPickle as pickle
+import os
+
+"""
+Hard-set some hyperprior defaults.  Synchronize to `sample.py`
+"""
+lnamp1 = -4.6
+lnamp2 = 2.3
+lnperiod1 = 2.3
+lnperiod2 = 9.2
+pars0 = np.array([lnamp1, lnamp2, lnperiod1, lnperiod2])
+pars1 = 1. * pars0
 
 def hogg_errorbar(x, y, yerr, **kwargs):
     """
@@ -44,7 +55,9 @@ def hogg_savefig(prefix):
     return None
 
 def read_pickle(prefix):
-    picklefile = open(prefix + ".pickle", "r")
+    fn = prefix + ".pickle"
+    print "reading " + fn
+    picklefile = open(fn, "r")
     sets = pickle.load(picklefile)
     picklefile.close()
     return sets
@@ -100,8 +113,64 @@ def plot_bin_stack_pickle(prefix):
     hogg_savefig(pprefix)
     return None
 
+def plot_hierarchical(prefix):
+    """
+    heavily synchronized with `sample.py`; and I don't mean that in a good way.
+    """
+    bigprefix = "hierarchical_" + prefix
+    if os.path.exists(bigprefix + ".pickle"):
+        chain = read_pickle(bigprefix)
+        endchain = chain[:,-1,:]
+        plt.clf()
+        plt.subplot(211)
+        plt.title(prefix)
+        for a, b, foo, bar in endchain:
+            plt.plot([lnamp1, a, a, b, b, lnamp2],
+                 [0, 0, 1. / (b - a), 1. / (b - a), 0, 0],
+                 'k-', alpha=0.5)
+        if prefix == "blank":
+            plt.axhline(0, color="b")
+        if prefix == "stack":
+            plt.axhline(0, color="b")
+            plt.axvline(np.log(1.), color="b")
+        if prefix == "ersatz":
+            dx = 0.001
+            xvec = np.arange(lnamp1 + 0.5 * dx, lnamp2, dx)
+            mean = np.log(1.)
+            sigma = 0.3 # synchronize with `ersatz_prior_draw()`
+            yvec = 1. / (np.sqrt(2. * np.pi) * sigma) * np.exp(-0.5 * (xvec - mean) ** 2. / (sigma * sigma))
+            print max(yvec)
+            plt.plot(xvec, yvec, "b-")
+        plt.xlabel("$\ln$ amplitude")
+        plt.xlim(lnamp1, lnamp2)
+        plt.subplot(212)
+        for foo, bar, a, b in endchain:
+            plt.plot([lnperiod1, a, a, b, b, lnperiod2],
+                 [0, 0, 1. / (b - a), 1. / (b - a), 0, 0],
+                 'k-', alpha=0.5)
+        if prefix == "blank":
+            plt.axhline(0, color="b")
+        if prefix == "stack":
+            plt.axhline(0, color="b")
+            plt.axvline(np.log(180.), color="b")
+        if prefix == "ersatz":
+            dx = 0.001
+            xvec = np.arange(lnperiod1 + 0.5 * dx, lnperiod2, dx)
+            mean = np.log(180.)
+            sigma = 0.5 # synchronize with `ersatz_prior_draw()`
+            yvec = 1. / (np.sqrt(2. * np.pi) * sigma) * np.exp(-0.5 * (xvec - mean) ** 2. / (sigma * sigma))
+            print max(yvec)
+            plt.plot(xvec, yvec, "b-")
+        plt.xlabel("$\ln$ period")
+        plt.xlim(lnperiod1, lnperiod2)
+        hogg_savefig(bigprefix)
+    else:
+        print "plot_hierarchical: no file; doing nothing"
+    return None
+
 if __name__ == "__main__":
     for prefix in ["blank", "stack", "ersatz"]:
         plot_pickle(prefix)
         plot_stack_pickle(prefix)
         plot_bin_stack_pickle(prefix)
+        plot_hierarchical(prefix)

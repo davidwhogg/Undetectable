@@ -45,9 +45,9 @@ def ersatz_prior_draw():
     """
     Draw an exoplanet from a crazy, hard-set prior.
     """
+    amp = np.exp(np.log(1.) + 0.3 * np.random.normal())
+    period = np.exp(np.log(180.) + 0.5 * np.random.normal())
     phase = 2. * np.pi * np.random.uniform()
-    period = np.exp(np.log(180.) + np.log(220./180.) * np.random.normal())
-    amp = np.exp(np.log(1.) + np.log(1.1) * np.random.normal())
     return amp, period, phase
 
 def add_ersatz(blanks):
