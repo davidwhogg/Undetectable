@@ -73,6 +73,7 @@ def plot_pickle(prefix):
         hogg_errorbar(times, rvs, sigmas, alpha=1.)
         plt.plot(times, rvs, 'ko', alpha=1.)
         hogg_lim_and_label()
+        plt.title("%s %03d" % (prefix, i))
         hogg_savefig(pprefix)
         if i == 7:
             break
@@ -85,6 +86,7 @@ def plot_stack_pickle(prefix):
     for i, (times, sigmas, rvs) in enumerate(sets):
         plt.plot(times, rvs, 'ko', alpha=0.1)
     hogg_lim_and_label()
+    plt.title("%s stack" % (prefix))
     hogg_savefig(pprefix)
     return None
 
@@ -110,6 +112,7 @@ def plot_bin_stack_pickle(prefix):
     hogg_errorbar(xp, yp, yperr, alpha=1.)
     plt.plot(xp, yp, 'ko', alpha=1.0)
     hogg_lim_and_label()
+    plt.title("%s stacked and binned" % (prefix))
     hogg_savefig(pprefix)
     return None
 
