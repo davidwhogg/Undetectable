@@ -55,6 +55,53 @@ estimation and model comparison are possible, informative model
 checking is nearly impossible.
 \end{abstract}
 
+\section{Introduction}
+
+Astronomers are good at looking at faint signals buried in data.
+In particular, a lot has been learned by \emph{stacking data}.
+If you have spectra (or photometry, or anything else) of a large number of sources
+which you expect to be very similar in important ways, you can co-add or average or sum
+the data.
+If the noise is uncorrelated and the assumption of similarity is reasonable,
+the signal-to-noise of the average or sum will increase with the square root of
+the number of sources.
+The stacking technique has been used to measure many faint signals, including
+[example, citation], [example, citation], and [example, citation], just to name
+a very few examples.
+In each of these cases, the signals of interest were not visible---or not at
+high enough signal-to-noise---in any individual source; it required the co-add of
+many exemplars to see the signal.
+
+Now consider the much more difficult situation in which there is something lurking
+in many individual sources, but it is "out of phase" or substantially different
+between one source and the next:
+What if you have lots of sources in which low signal-to-noise signals are hiding, but
+they don't have the property that co-addition will render them visible?
+In \figurenames~\ref{fig:stack} and \ref{fig:ersatz} we show examples of two data
+sets.
+In the first data set---the ``stack'' set---a coherent and more-or-less identical
+signal is present in every source; in the second---the ``ersatz'' set---there is
+just as much \emph{total} signal, but the signals have different phases and periods.
+The \figurenames\ show that the ``stack'' data can be stacked to find the hidden
+signal but the ``ersatz'' sample can't.
+Both data sets have the same amount of information in similar kinds of signals
+in the same amount of data with the same noise properties; if we can find the signal
+in the ``stack'' data, then we must be able to find it in the ``ersatz'' data as
+well.
+
+In what follows, we will show that we \emph{can} find the signal in the ``ersatz''
+data, and that we can measure it with good precision and accuracy.
+The method involves hierarchical modeling, and is not computationally trivial.
+The method works here, but has applications in many other areas, including those
+in which we want to measure distribution functions for source populations, when for
+each member of the population we only have low signal-to-noise measurements.
+Our solution also ought to help with the detection and analysis of signals that
+meet the requirements for stacking to work.
+That is, we present here the \emph{probabilistic generalization of stacking}.
+It is computationally expensive, but the benefits include far more power;
+in particular, we can measure the properties of a population of objects
+\emph{no member of which has been individually detected}.
+
 \section{Method}
 
 The toy model is
