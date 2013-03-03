@@ -42,7 +42,7 @@ def hogg_lim_and_label():
     plt.xlim(-20., 1020.)
     plt.xlabel("time (d)")
     plt.ylim(-20., 20.)
-    plt.ylabel("radial velocity (km\,s$^{-1}$)")
+    plt.ylabel("radial velocity (m\,s$^{-1}$)")
     return None
 
 def hogg_savefig(prefix):
