@@ -1,6 +1,6 @@
 .SUFFIXES: .tex .ps .pdf .png .jpg
 
-all: population.pdf
+all: exoplanet_population.pdf
 
 %.pdf: %.tex
 	pdflatex $<
